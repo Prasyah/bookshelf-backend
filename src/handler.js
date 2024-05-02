@@ -53,7 +53,7 @@ const saveBookHandler = (request, h) => {
                     status: 'success',
                     message: 'Buku berhasil ditambahkan',
                     data: {
-                        noteId: id,
+                        bookId: id,
                     },
                 });
                 response.code(201);
@@ -86,7 +86,7 @@ const saveBookHandler = (request, h) => {
 };
 
 getAllBooksHandler = (request, h) => {
-    const simplifiedBooks = books.map(book => ({
+    const simplifiedBooks = books.slice(0, 1).map(book => ({
         id: book.id,
         name: book.name,
         publisher: book.publisher
@@ -170,23 +170,25 @@ const editBookByIdHandler = (request, h) => {
                 });
                 response.code(200);
                 return response;
+            } else {
+
+                const response = h.response({
+                    status: 'fail',
+                    message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
+                });
+                response.code(400); // Ubah status code menjadi 400
+                return response;
             }
+        } else {
 
             const response = h.response({
                 status: 'fail',
-                message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
+                message: 'Gagal memperbarui buku. Mohon isi nama buku',
             });
             response.code(400);
             return response;
         }
-
-        const response = h.response({
-            status: 'fail',
-            message: 'Gagal memperbarui buku. Mohon isi nama buku',
-        });
-        response.code(400);
-        return response;
-    }
+    } else {
 
     const response = h.response({
         status: 'fail',
@@ -194,6 +196,7 @@ const editBookByIdHandler = (request, h) => {
     });
     response.code(404);
     return response;
+    }
 };
 
 const deleteBookByIdHandler = (request, h) => {
