@@ -2,9 +2,8 @@ const { nanoid } = require('nanoid');
 const books = require('./books');
 
 const saveBookHandler = (request, h) => {
-
     const { 
-        name, 
+        name="", 
         year, 
         author, 
         summary, 
@@ -45,7 +44,7 @@ const saveBookHandler = (request, h) => {
     const isSuccessID = books.filter((book) => book.id.toString() === id.toString()).length > 0;
 
     if (isSuccessID) {
-        const hasBookName = newBook.name !== undefined;
+        const hasBookName = name !== "";
         if(hasBookName){
             const readPageBigger = newBook.readPage <= newBook.pageCount;
             if(readPageBigger){
@@ -175,14 +174,14 @@ const editBookByIdHandler = (request, h) => {
     const index = books.findIndex((book) => book.id === id);
 
     if (index !== -1) {
-        const hasBookName = books[index].name !== undefined;
-        if( hasBookName){
-            const readPageBigger = books[index].readPage < books[index].pageCount;
-            if( pageCount === readPage ){
+        if (name !== undefined){
+            const readPageBigger = readPage < pageCount;
+            if ( pageCount === readPage ){
                 books[index].finished = true;
             } else {
                 books[index].finished = false;
             }
+
             if(readPageBigger){
                 books[index] = {
                     ...books[index],
@@ -222,7 +221,7 @@ const editBookByIdHandler = (request, h) => {
 
     const response = h.response({
         status: 'fail',
-        message: 'Gagal memperbarui buku, Id tidak ditemukan',
+        message: 'Gagal memperbarui buku. Id tidak ditemukan',
     });
     response.code(404);
     return response;
