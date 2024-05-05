@@ -107,6 +107,15 @@ const getAllBooksHandler = (request, h) => {
         filteredBooks = books.filter(book => book.name.toLowerCase().includes(lowerCaseName));
     }
 
+    if (filteredBooks.length === 0) {
+        const response = h.response({
+            status: 'fail',
+            message: 'Buku tidak ditemukan',
+        });
+        response.code(404);
+        return response;
+    }
+
     const simplifiedBooks = filteredBooks.map(book => ({
         id: book.id,
         name: book.name,
